@@ -27,7 +27,7 @@ public class OrderRepo {
 
     private void checkProductInRepo(ProductRepo productRepo, String productId){
         if(productRepo.get(productId)==null)
-            throw new RuntimeException("Product with id " + productId + " is not available!");
+            throw new RuntimeException("Product with id '" + productId + "' is not available!");
         // TODO check if product is generally available but not in stock?
     }
 
