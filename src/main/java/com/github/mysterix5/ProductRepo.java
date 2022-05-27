@@ -26,15 +26,4 @@ public class ProductRepo {
         }
     }
 
-    public static List<Product> createDummyProducts(){
-        List<Product> products = new ArrayList<>();
-
-        Product towel = new DigitalProduct("Towel");
-        Product pen = new PhysicalProduct("Pen");
-
-        products.add(towel);
-        products.add(pen);
-
-        return products;
-    }
 }

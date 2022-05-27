@@ -2,17 +2,29 @@ package com.github.mysterix5;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShopServiceTest {
 
+    public List<Product> createDummyProducts(){
+        List<Product> products = new ArrayList<>();
+
+        Product towel = new DigitalProduct("Towel");
+        Product pen = new PhysicalProduct("Pen");
+
+        products.add(towel);
+        products.add(pen);
+
+        return products;
+    }
     @Test
     void getProduct() {
         // create product repo
         ProductRepo productRepo = new ProductRepo();
-        var products = ProductRepo.createDummyProducts();
+        var products = createDummyProducts();
         productRepo.fill(products);
         // create order repo
         OrderRepo orderRepo = new OrderRepo();
@@ -31,7 +43,7 @@ class ShopServiceTest {
     void listProducts() {
         // create product repo
         ProductRepo productRepo = new ProductRepo();
-        var products = ProductRepo.createDummyProducts();
+        var products = createDummyProducts();
         productRepo.fill(products);
         // create order repo
         OrderRepo orderRepo = new OrderRepo();
@@ -51,7 +63,7 @@ class ShopServiceTest {
     void addOrder() {
         // create product repo
         ProductRepo productRepo = new ProductRepo();
-        var products = ProductRepo.createDummyProducts();
+        var products = createDummyProducts();
         productRepo.fill(products);
         // create order repo
         OrderRepo orderRepo = new OrderRepo();
@@ -75,7 +87,7 @@ class ShopServiceTest {
     void getOrder() {
         // create product repo
         ProductRepo productRepo = new ProductRepo();
-        var products = ProductRepo.createDummyProducts();
+        var products = createDummyProducts();
         productRepo.fill(products);
         // create order repo
         OrderRepo orderRepo = new OrderRepo();
@@ -103,7 +115,7 @@ class ShopServiceTest {
     void listOrders() {
         // create product repo
         ProductRepo productRepo = new ProductRepo();
-        var products = ProductRepo.createDummyProducts();
+        var products = createDummyProducts();
         productRepo.fill(products);
         // create order repo
         OrderRepo orderRepo = new OrderRepo();
@@ -121,4 +133,5 @@ class ShopServiceTest {
         assertTrue(productsFromGetOrder.containsAll(products));
         assertTrue(products.containsAll(productsFromGetOrder));
     }
+
 }
