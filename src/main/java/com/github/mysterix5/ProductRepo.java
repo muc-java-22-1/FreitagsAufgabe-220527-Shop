@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class ProductRepo {
 
-    private Map<String, Product> products = new HashMap<>();
+    private final Map<String, Product> products = new HashMap<>();
 
     public ProductRepo(){
     }
@@ -29,8 +29,8 @@ public class ProductRepo {
     public static List<Product> createDummyProducts(){
         List<Product> products = new ArrayList<>();
 
-        Product towel = new Product("Towel");
-        Product pen = new Product("Pen");
+        Product towel = new DigitalProduct("Towel");
+        Product pen = new PhysicalProduct("Pen");
 
         products.add(towel);
         products.add(pen);
