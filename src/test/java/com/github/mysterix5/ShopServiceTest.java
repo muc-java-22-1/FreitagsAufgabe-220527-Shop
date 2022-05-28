@@ -38,9 +38,9 @@ class ShopServiceTest {
         String orderId = shopService.addOrder(List.of(products.get(0).getId()));
 
         // test if product lists match
-        assertThat(shopService.listOrders().get(0).getProducts())
+        assertThat(shopService.get(orderId).getProducts())
                 .as("creating an order and adding it")
-                .containsExactly(products.get(1));
+                .containsExactly(products.get(0));
     }
 
         @Test
