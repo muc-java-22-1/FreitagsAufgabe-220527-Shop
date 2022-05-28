@@ -55,10 +55,6 @@ class ShopServiceTest {
         List<Product> actual = shopService.listProducts();
 
         // test if original products match listProducts() from shopService
-        assertTrue(products.containsAll(actual));
-        assertTrue(actual.containsAll(products));
-
-        // assertj
         assertThat(actual).containsExactlyInAnyOrderElementsOf(products);
     }
 
@@ -74,16 +70,10 @@ class ShopServiceTest {
         ShopService shopService = new ShopService(productRepo, orderRepo);
 
         // add order
-        shopService.addOrder(List.of(products.get(0).getId()));
-
-        // get products from added order
-        List<Product> actual = shopService.listOrders().get(0).getProducts();
-        // remove product from original product list to match order products
-        products.remove(1);
+        String orderId = shopService.addOrder(List.of(products.get(0).getId()));
 
         // test if product lists match
-        assertTrue(actual.containsAll(products));
-        assertTrue(products.containsAll(actual));
+        assertThat(shopService.listOrders().get(0).getProducts()).containsExactly(products.get(0));
     }
 
     @Test
@@ -98,20 +88,12 @@ class ShopServiceTest {
         ShopService shopService = new ShopService(productRepo, orderRepo);
 
         // add order
-        shopService.addOrder(List.of(products.get(0).getId()));
+        String orderId = shopService.addOrder(List.of(products.get(0).getId()));
 
         // get order
-        String orderId = shopService.listOrders().get(0).getId();
         Order actual = shopService.getOrder(orderId);
 
-        var productsFromGetOrder = actual.getProducts();
-
-        // remove product from original product list to match order products
-        products.remove(1);
-
-        // test if product lists match
-        assertTrue(productsFromGetOrder.containsAll(products));
-        assertTrue(products.containsAll(productsFromGetOrder));
+        assertThat(shopService.getOrder(orderId).getProducts()).containsExactly(products.get(0));
     }
 
     @Test
@@ -126,15 +108,12 @@ class ShopServiceTest {
         ShopService shopService = new ShopService(productRepo, orderRepo);
 
         // add order
-        shopService.addOrder(List.of(products.get(0).getId()));
+        String orderId1 = shopService.addOrder(List.of(products.get(0).getId()));
+        String orderId2 = shopService.addOrder(List.of(products.get(0).getId(), products.get(1).getId()));
 
-        var actual = shopService.listOrders();
-        var productsFromGetOrder = actual.get(0).getProducts();
-
-        products.remove(1);
-
-        assertTrue(productsFromGetOrder.containsAll(products));
-        assertTrue(products.containsAll(productsFromGetOrder));
+        assertThat(shopService.listOrders())
+                .extracting(Order::getProducts)
+                .contains(products, List.of(products.get(0)));
     }
 
 }

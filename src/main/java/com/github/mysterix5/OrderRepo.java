@@ -13,7 +13,7 @@ public class OrderRepo {
         return orders.values().stream().toList();
     }
 
-    public void add(ProductRepo productRepo, List<String> productIds){
+    public String add(ProductRepo productRepo, List<String> productIds){
         // TODO abort complete order if one product fails, or print error and add the others?
         if(productIds.isEmpty()) throw new RuntimeException("It is not possible to add an order with zero products!");
         List<Product> productsInOrder = new ArrayList<>();
@@ -23,6 +23,8 @@ public class OrderRepo {
         }
         Order order = new Order(productsInOrder);
         orders.put(order.getId(), order);
+
+        return order.getId();
     }
 
     private void checkProductInRepo(ProductRepo productRepo, String productId){
