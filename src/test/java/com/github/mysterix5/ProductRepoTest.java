@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 class ProductRepoTest {
 
@@ -22,20 +22,19 @@ class ProductRepoTest {
     }
     @Test
     void list() {
-        ProductRepo pr = new ProductRepo();
+        ProductRepo productRepo = new ProductRepo();
         var products = createDummyProducts();
-        pr.fill(products);
+        productRepo.fill(products);
 
-        assertTrue(products.containsAll(pr.list()));
-        assertTrue(pr.list().containsAll(products));
+        assertThat(productRepo.list()).containsExactlyInAnyOrderElementsOf(products);
     }
 
     @Test
     void get() {
-        ProductRepo pr = new ProductRepo();
+        ProductRepo productRepo = new ProductRepo();
         var products = createDummyProducts();
-        pr.fill(products);
+        productRepo.fill(products);
 
-        assertEquals(products.get(0), pr.get(products.get(0).getId()));
+        assertThat(productRepo.get(products.get(0).getId())).isEqualTo(products.get(0));
     }
 }

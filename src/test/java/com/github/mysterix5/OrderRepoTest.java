@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 class OrderRepoTest {
 
@@ -22,6 +21,7 @@ class OrderRepoTest {
 
         return products;
     }
+
     @Test
     void list_valid_orders() {
         ProductRepo productRepo = new ProductRepo();
@@ -29,11 +29,11 @@ class OrderRepoTest {
         productRepo.fill(products);
 
         OrderRepo orderRepo = new OrderRepo();
-        orderRepo.add(productRepo, Arrays.asList(products.get(0).getId(), products.get(1).getId()));
-        orderRepo.add(productRepo, List.of(products.get(0).getId()));
+        String order0Id = orderRepo.add(productRepo, Arrays.asList(products.get(0).getId(), products.get(1).getId()));
+        String order1Id = orderRepo.add(productRepo, List.of(products.get(0).getId()));
 
-        assertTrue(products.containsAll(orderRepo.list().get(0).getProducts()));
-        assertTrue(products.containsAll(orderRepo.list().get(1).getProducts()));
+        assertThat(orderRepo.get(order0Id).getProducts()).extracting(Product::getName).contains("Towel", "Pen");
+        assertThat(orderRepo.get(order1Id).getProducts()).extracting(Product::getName).contains("Towel");
     }
 
     @Test
@@ -44,12 +44,10 @@ class OrderRepoTest {
 
         OrderRepo orderRepo = new OrderRepo();
         List<String> orderProductList = new ArrayList<>();
-        try {
-            orderRepo.add(productRepo, orderProductList);
-            fail();
-        }catch(RuntimeException e){
-            System.err.println(e.getMessage());
-        }
+
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> orderRepo.add(productRepo, orderProductList))
+                .withMessage("It is not possible to add an order with zero products!");
     }
     @Test
     void add_valid_product() {
@@ -61,13 +59,9 @@ class OrderRepoTest {
         List<String> orderProductList = new ArrayList<>();
         orderProductList.add(products.get(0).getId());
 
-        orderRepo.add(productRepo, orderProductList);
+        String orderId = orderRepo.add(productRepo, orderProductList);
 
-        List<Product> getProductsFromOrder = new ArrayList<>(orderRepo.list().get(0).getProducts());
-        products.remove(1);
-
-        assertTrue(getProductsFromOrder.containsAll(products));
-        assertTrue(products.containsAll(getProductsFromOrder));
+        assertThat(orderRepo.get(orderId).getProducts()).containsExactly(products.get(0));
     }
     @Test
     void add_invalid_product() {
@@ -79,12 +73,9 @@ class OrderRepoTest {
         List<String> orderProductList = new ArrayList<>();
         orderProductList.add("notValidId");
 
-        try {
-            orderRepo.add(productRepo, orderProductList);
-            fail();
-        }catch(Exception e){
-            System.err.println(e.getMessage());
-        }
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(()->orderRepo.add(productRepo, orderProductList))
+                .withMessage("Product with id 'notValidId' is not available!");
     }
 
     @Test
@@ -94,12 +85,10 @@ class OrderRepoTest {
         productRepo.fill(products);
 
         OrderRepo orderRepo = new OrderRepo();
-        orderRepo.add(productRepo, Arrays.asList(products.get(0).getId(), products.get(1).getId()));
-        orderRepo.add(productRepo, List.of(products.get(0).getId()));
+        String orderId1 = orderRepo.add(productRepo, Arrays.asList(products.get(0).getId(), products.get(1).getId()));
+        String orderId2 = orderRepo.add(productRepo, List.of(products.get(0).getId()));
 
-        String[] orderIds = {orderRepo.list().get(0).getId(), orderRepo.list().get(1).getId()};
-
-        assertTrue(products.containsAll(orderRepo.get(orderIds[0]).getProducts()));
-        assertTrue(products.containsAll(orderRepo.get(orderIds[1]).getProducts()));
+        assertThat(orderRepo.get(orderId1).getProducts()).extracting(Product::getName).contains("Towel", "Pen");
+        assertThat(orderRepo.get(orderId2).getProducts()).extracting(Product::getName).contains("Towel");
     }
 }
