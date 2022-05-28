@@ -10,7 +10,7 @@ on:
     branches: [ main, shop-service ]
 
 jobs:
-  build:
+  maven_build:
 
     runs-on: ubuntu-latest
 
