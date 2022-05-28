@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 class ShopServiceTest {
 
@@ -35,8 +36,8 @@ class ShopServiceTest {
         Product expected = products.get(0);
         Product actual = shopService.getProduct(expected.getId());
 
-        // test if original products match listProducts() from shopService
-        assertEquals(expected, actual);
+        // test if original product matches getProduct(id) from shopService
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -51,12 +52,14 @@ class ShopServiceTest {
         ShopService shopService = new ShopService(productRepo, orderRepo);
 
         // set expected and actual product list
-        List<Product> expected = products;
         List<Product> actual = shopService.listProducts();
 
         // test if original products match listProducts() from shopService
-        assertTrue(expected.containsAll(actual));
-        assertTrue(actual.containsAll(expected));
+        assertTrue(products.containsAll(actual));
+        assertTrue(actual.containsAll(products));
+
+        // assertj
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(products);
     }
 
     @Test

@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OrderRepoTest {
 
@@ -22,6 +23,7 @@ class OrderRepoTest {
 
         return products;
     }
+
     @Test
     void list_valid_orders() {
         ProductRepo productRepo = new ProductRepo();
@@ -85,6 +87,10 @@ class OrderRepoTest {
         }catch(Exception e){
             System.err.println(e.getMessage());
         }
+
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(()->orderRepo.add(productRepo, orderProductList));
+//                .withMessage("Product with id '" + productId + "' is not available!");
     }
 
     @Test
