@@ -40,7 +40,7 @@ class ShopServiceTest {
         // test if product lists match
         assertThat(shopService.listOrders().get(0).getProducts())
                 .as("creating an order and adding it")
-                .containsExactly(products.get(0));
+                .containsExactly(products.get(1));
     }
 
         @Test
