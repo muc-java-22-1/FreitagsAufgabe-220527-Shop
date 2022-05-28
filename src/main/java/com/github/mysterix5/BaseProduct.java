@@ -23,4 +23,13 @@ public abstract class BaseProduct {
     public String getName() {
         return name;
     }
+
+
+    @Override
+    public String toString() {
+        return "BaseProduct{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
