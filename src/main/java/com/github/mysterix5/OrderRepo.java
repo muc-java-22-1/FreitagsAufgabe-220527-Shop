@@ -1,9 +1,6 @@
 package com.github.mysterix5;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OrderRepo {
     Map<String, Order> orders = new HashMap<>();
@@ -18,8 +15,7 @@ public class OrderRepo {
         if(productIds.isEmpty()) throw new RuntimeException("It is not possible to add an order with zero products!");
         List<Product> productsInOrder = new ArrayList<>();
         for(String p: productIds){
-            checkProductInRepo(productRepo, p);
-            productsInOrder.add(productRepo.get(p));
+            productsInOrder.add(productRepo.get(p).orElseThrow(()->new RuntimeException("Product with id '" + p + "' is not available!")));
         }
         Order order = new Order(productsInOrder);
         orders.put(order.getId(), order);
@@ -27,13 +23,7 @@ public class OrderRepo {
         return order.getId();
     }
 
-    private void checkProductInRepo(ProductRepo productRepo, String productId){
-        if(productRepo.get(productId)==null)
-            throw new RuntimeException("Product with id '" + productId + "' is not available!");
-        // TODO check if product is generally available but not in stock?
-    }
-
-    public Order get(String id){
-        return orders.get(id);
+    public Optional<Order> get(String id){
+        return Optional.ofNullable(orders.get(id));
     }
 }

@@ -33,7 +33,7 @@ class ShopServiceTest {
     class orders{
         @Test
         @DisplayName("Add order to shopService")
-        void addOrder () {
+        void addOrderWithValidProductsShouldPass () {
         // add order
         String orderId = shopService.addOrder(List.of(products.get(0).getId()));
 
@@ -42,9 +42,25 @@ class ShopServiceTest {
                 .as("creating an order and adding it")
                 .containsExactly(products.get(0));
     }
+        @Test
+        void addOrderWithInvalidProductsShouldThrow () {
+            assertThatThrownBy(()->shopService.addOrder(List.of("notValidId")))
+                    .isExactlyInstanceOf(RuntimeException.class)
+                    .hasMessage("Adding order failed")
+                    .getCause().isExactlyInstanceOf(RuntimeException.class)
+                    .hasMessage("Product with id 'notValidId' is not available!");
+    }
+        @Test
+        void addOrderWithNoProductsShouldThrow () {
+            assertThatThrownBy(()->shopService.addOrder(new ArrayList<>()))
+                    .isExactlyInstanceOf(RuntimeException.class)
+                    .hasMessage("Adding order failed")
+                    .getCause().isExactlyInstanceOf(RuntimeException.class)
+                    .hasMessage("It is not possible to add an order with zero products!");
+    }
 
         @Test
-        void getOrder () {
+        void getOrderValidShouldPass () {
         // add order
         String orderId = shopService.addOrder(List.of(products.get(0).getId()));
 
@@ -53,9 +69,19 @@ class ShopServiceTest {
 
         assertThat(shopService.getOrder(orderId).getProducts()).containsExactly(products.get(0));
     }
+        @Test
+        void getOrderWrongIdShouldThrow () {
+        // add order
+        String orderId = shopService.addOrder(List.of(products.get(0).getId()));
+
+        assertThatThrownBy(()->shopService.getOrder("notValidId"))
+                .isExactlyInstanceOf(RuntimeException.class)
+                .hasMessage("Order with id 'notValidId' is not available!")
+                .hasNoCause();
+    }
 
         @Test
-        void listOrders () {
+        void listOrdersContainingSome () {
         // add order
         String orderId1 = shopService.addOrder(List.of(products.get(0).getId()));
         String orderId2 = shopService.addOrder(List.of(products.get(0).getId(), products.get(1).getId()));
@@ -63,12 +89,20 @@ class ShopServiceTest {
         assertThat(shopService.listOrders())
                 .extracting(Order::getProducts)
                 .containsExactlyInAnyOrder(products, List.of(products.get(0)));
-    }
+        }
+
+        @Test
+        void listOrdersEmpty () {
+            assertThat(shopService.listOrders())
+                .extracting(Order::getProducts)
+                .isEmpty();
+        }
+
     }
     @Nested
     class products {
         @Test
-        void getProduct() {
+        void getProductValid() {
             // set expected and actual product
             Product expected = products.get(0);
             Product actual = shopService.getProduct(expected.getId());
@@ -76,9 +110,16 @@ class ShopServiceTest {
             // test if original product matches getProduct(id) from shopService
             assertThat(actual).isEqualTo(expected);
         }
+        @Test
+        void getProductInvalidId() {
+            assertThatThrownBy(()->shopService.getProduct("notValidId"))
+                    .isExactlyInstanceOf(RuntimeException.class)
+                    .hasMessage("Product with id 'notValidId' is not available!")
+                    .hasNoCause();
+        }
 
         @Test
-        void listProducts() {
+        void listProductsValid() {
             // set expected and actual product list
             List<Product> actual = shopService.listProducts();
 

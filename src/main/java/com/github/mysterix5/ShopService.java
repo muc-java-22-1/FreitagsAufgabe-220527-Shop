@@ -1,6 +1,5 @@
 package com.github.mysterix5;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ShopService {
@@ -14,7 +13,7 @@ public class ShopService {
 
     public Product getProduct(String productId){
 
-        return productRepo.get(productId);
+        return productRepo.get(productId).orElseThrow(()->new RuntimeException("Product with id '" + productId + "' is not available!"));
     }
 
     public List<Product> listProducts(){
@@ -22,11 +21,15 @@ public class ShopService {
     }
 
     public String addOrder(List<String> productIds){
-        return orderRepo.add(productRepo, productIds);
+        try{
+            return orderRepo.add(productRepo, productIds);
+        }catch(RuntimeException e){
+            throw new RuntimeException("Adding order failed", e);
+        }
     }
 
     public Order getOrder(String orderId){
-        return orderRepo.get(orderId);
+        return orderRepo.get(orderId).orElseThrow(()->new RuntimeException("Order with id '" + orderId + "' is not available!"));
     }
 
     public List<Order> listOrders(){

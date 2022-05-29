@@ -1,9 +1,9 @@
 package com.github.mysterix5;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ProductRepo {
 
@@ -12,8 +12,8 @@ public class ProductRepo {
     public ProductRepo(){
     }
 
-    public Product get(String id){
-        return products.get(id);
+    public Optional<Product> get(String id){
+        return Optional.ofNullable(products.get(id));
     }
 
     public List<Product> list(){
