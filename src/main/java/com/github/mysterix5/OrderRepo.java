@@ -12,7 +12,9 @@ public class OrderRepo {
 
     public String add(ProductRepo productRepo, List<String> productIds){
         // TODO abort complete order if one product fails, or print error and add the others?
-        if(productIds.isEmpty()) throw new RuntimeException("It is not possible to add an order with zero products!");
+        if(productIds.isEmpty()) {
+            throw new RuntimeException("It is not possible to add an order with zero products!");
+        }
         List<Product> productsInOrder = new ArrayList<>();
         for(String p: productIds){
             productsInOrder.add(productRepo.get(p).orElseThrow(()->new RuntimeException("Product with id '" + p + "' is not available!")));

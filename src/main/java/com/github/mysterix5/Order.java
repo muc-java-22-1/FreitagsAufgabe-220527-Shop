@@ -20,9 +20,4 @@ public class Order {
         id = UUID.randomUUID().toString();
         products = new ArrayList<>(productList);
     }
-    public Order(String id, List<Product> productList){
-        // TODO custom ids must be unique-checked
-        this.id = id;
-        products = new ArrayList<>(productList);
-    }
 }

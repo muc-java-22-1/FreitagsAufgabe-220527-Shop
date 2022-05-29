@@ -9,9 +9,6 @@ public class ProductRepo {
 
     private final Map<String, Product> products = new HashMap<>();
 
-    public ProductRepo(){
-    }
-
     public Optional<Product> get(String id){
         return Optional.ofNullable(products.get(id));
     }

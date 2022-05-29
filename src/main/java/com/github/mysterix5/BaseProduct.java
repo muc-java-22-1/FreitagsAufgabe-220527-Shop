@@ -10,11 +10,6 @@ public abstract class BaseProduct {
         id = UUID.randomUUID().toString();
         this.name = name;
     }
-    public BaseProduct(String id, String name){
-        // TODO custom ids must be unique-checked
-        this.id = id;
-        this.name = name;
-    }
 
     public String getId() {
         return id;
