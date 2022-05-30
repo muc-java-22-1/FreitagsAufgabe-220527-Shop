@@ -1,6 +1,7 @@
 package com.github.mysterix5;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ShopService {
     private final ProductRepo productRepo;
@@ -9,6 +10,10 @@ public class ShopService {
     public ShopService(ProductRepo productRepo, OrderRepo orderRepo){
         this.productRepo = productRepo;
         this.orderRepo = orderRepo;
+    }
+
+    public Product getProductByName(String name){
+        return productRepo.getProductByName(name).orElseThrow(()->new NoSuchElementException("Product with name '" + name + "' is not available!"));
     }
 
     public Product getProduct(String productId){

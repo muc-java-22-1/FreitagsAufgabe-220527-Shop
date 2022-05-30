@@ -23,4 +23,10 @@ public class ProductRepo {
         }
     }
 
+    public Optional<Product> getProductByName(String name){
+        return products.values().stream()
+                .filter(product -> product.getName().equals(name))
+                .findFirst();
+    }
+
 }
