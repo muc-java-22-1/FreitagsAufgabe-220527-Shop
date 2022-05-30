@@ -12,8 +12,11 @@ public class ShopService {
         this.orderRepo = orderRepo;
     }
 
-    public Product getProductByName(String name){
-        return productRepo.getProductByName(name).orElseThrow(()->new NoSuchElementException("Product with name '" + name + "' is not available!"));
+    public List<Product> getAllProductsContainingName(String name){
+        return productRepo.getAllProductsContainingName(name);
+    }
+    public Product getFirstProductByExactName(String name){
+        return productRepo.getFirstProductByExactName(name).orElseThrow(()->new NoSuchElementException("Product with name '" + name + "' is not available!"));
     }
 
     public Product getProduct(String productId){

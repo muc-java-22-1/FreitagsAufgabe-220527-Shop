@@ -115,16 +115,33 @@ class ShopServiceTest {
         }
 
         @Test
-        void getProductByName() {
+        void getFirstProductByExactName_valid() {
             var expected = myTestProduct;
-            var actual = shopService.getProductByName(expected.getName());
+            var actual = shopService.getFirstProductByExactName(expected.getName());
             assertThat(actual).isEqualTo(expected);
         }
         @Test
-        void getProductByNameNonExistent() {
-            assertThatThrownBy(()->shopService.getProductByName("NonExistentProductName"))
+        void getFirstProductByExactName_NonExistent() {
+            assertThatThrownBy(()->shopService.getFirstProductByExactName("NonExistentProductName"))
                     .isExactlyInstanceOf(NoSuchElementException.class)
                     .hasNoCause();
+        }
+
+        @Test
+        void getAllProductsByName_valid_1hit(){
+            var expected = List.of(myTestProduct);
+            var actual = shopService.getAllProductsContainingName(myTestProduct.getName());
+
+            assertThat(actual).isEqualTo(expected);
+        }
+        @Test
+        void getAllProductsByName_valid_multipleHits(){
+            var additionalProduct = new PhysicalProduct("BestTowelEver");
+            productRepo.fill(List.of(additionalProduct));
+            var expected = List.of(myTestProduct, additionalProduct);
+            var actual = shopService.getAllProductsContainingName("ToWeL");
+
+            assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
         }
 
         @Test

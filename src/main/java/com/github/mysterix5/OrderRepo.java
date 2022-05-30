@@ -16,7 +16,8 @@ public class OrderRepo {
             throw new RuntimeException("It is not possible to add an order with zero products!");
         }
         List<Product> productsInOrder = productIds.stream()
-                .map(p -> productRepo.get(p).orElseThrow(()->new NoSuchElementException("Product with id '" + p + "' is not available!")))
+                .map(p -> productRepo.get(p).orElseThrow(
+                        ()->new NoSuchElementException("Product with id '" + p + "' is not available!")))
                 .toList();
         Order order = new Order(productsInOrder);
         orders.put(order.getId(), order);

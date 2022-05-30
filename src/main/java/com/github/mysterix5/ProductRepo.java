@@ -23,10 +23,15 @@ public class ProductRepo {
         }
     }
 
-    public Optional<Product> getProductByName(String name){
+    public Optional<Product> getFirstProductByExactName(String name){
         return products.values().stream()
                 .filter(product -> product.getName().equals(name))
                 .findFirst();
+    }
+    public List<Product> getAllProductsContainingName(String name){
+        return products.values().stream()
+                .filter(product -> product.getName().toLowerCase().contains(name.toLowerCase()))
+                .toList();
     }
 
 }
